@@ -1,0 +1,15 @@
+.sandbox-button {
+  padding: 1em 2em;
+  font-size: 1em;
+  letter-spacing: 0.2em;
+  font-weight: 700;
+}
+
+.sandbox-button.connect-button {
+  background-color: lightblue;
+}
+
+.sandbox-button.disconnect-button {
+  background-color: darkred;
+  color: ghostwhite;
+}
