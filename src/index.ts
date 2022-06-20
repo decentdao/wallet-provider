@@ -1,5 +1,11 @@
 import { Web3Provider } from './Web3Provider';
-import { useWeb3Provider } from './hooks/useWeb3Provider';
+export * from './hooks/useWeb3Provider';
+export * from './hooks/useListeners';
+export * from './types';
+export * from './chains';
+export * from './helpers';
+export * from './actions';
 
-export { Web3Provider, useWeb3Provider };
+
+
 export default Web3Provider;
