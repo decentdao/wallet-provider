@@ -1,16 +1,19 @@
 {
   "name": "decent-wallet-provider",
-  "type": "module",
   "version": "1.0.0",
   "description": "Using ![Web3 Modal](https://web3modal.com) to connect Ethereum or EVM supported wallets.",
   "source": "src/index.ts",
-  "main": "dist/index.cjs",
+  "main": "dist/index.js",
   "unpkg": "dist/index.umd.js",
   "module": "dist/index.module.js",
   "typings": "dist/index.d.ts",
   "exports": {
-    "require": "./dist/index.cjs",      
-    "default": "./dist/index.modern.mjs"
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.esm.mjs",
+      "umd": "./dist/index.umd.js"
+    },
+    "./package.json": "./package.json"
   },
   "peerDependencies": {
     "react": ">=16",
@@ -29,10 +32,10 @@
   "dependencies": {
     "@walletconnect/ethereum-provider": "^1.7.8",
     "ethers": "^5.6.9",
-    "microbundle": "^0.15.0",
     "web3modal": "^1.9.8"
   },
   "devDependencies": {
+    "microbundle": "^0.15.0",
     "@types/node": "^18.0.0",
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",

@@ -1,6 +1,6 @@
 import Web3Modal from 'web3modal';
 import { ethers, getDefaultProvider } from 'ethers';
-import { InjectedProviderInfo, BaseProviderInfo, ProviderApiKeys } from './types';
+import { InjectedProviderInfo, BaseProviderInfo, ProviderApiKeys } from '../types';
 
 export const makeInjectedProvider = async (
   web3Provider: ethers.providers.Web3Provider

@@ -1,4 +1,4 @@
-import { InjectedProviderInfo, BaseProviderInfo } from './types';
+import { InjectedProviderInfo, BaseProviderInfo } from '../types';
 
 export enum Web3ProviderActions {
   DISCONNECT_WALLET = 'DISCONNECT_WALLET',
