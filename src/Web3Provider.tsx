@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
 import Web3Modal from 'web3modal';
 import type { ConnectFn, DisconnectFn, InitialState } from './types';
 import { ActionTypes, Web3ProviderActions } from './actions';
