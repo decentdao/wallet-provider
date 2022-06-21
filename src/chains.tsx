@@ -1,11 +1,13 @@
-export const supportedChains = () => {
+import { DWPConfig } from "./types";
+
+export const supportedChains = (config: DWPConfig) => {
   const dev =
     process.env.NODE_ENV !== 'production'
-      ? [parseInt(process.env.REACT_APP_LOCAL_CHAIN_ID || '0')]
+      ? [parseInt(config.local?.localChainId || '0')]
       : [];
   const supported = [
     ...dev,
-    ...(process.env.REACT_APP_SUPPORTED_CHAIN_IDS || '').split(',').map(i => parseInt(i)),
+    ...(config.supportedChains || '').split(',').map(i => parseInt(i)),
   ];
   return supported;
 };

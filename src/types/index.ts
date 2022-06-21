@@ -42,3 +42,15 @@ export type ProviderApiKeys = {
   alchemy?: string;
   etherscan?: string;
 };
+
+export interface DWPConfig {
+  isDev: boolean, // defaults false
+  providerKeys: ProviderApiKeys,
+  local?: {
+    localChainId: string,
+    providerURL: string,
+  },
+  fallbackChainId: string,
+  supportedChains: string, // 3,4 chains seperated by commas
+  devTxWait: number // default 5000, in milliseconds
+}

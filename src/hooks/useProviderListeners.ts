@@ -1,5 +1,5 @@
 import WalletConnectProvider from '@walletconnect/ethereum-provider';
-import { ConnectFn, ModalProvider } from '../types';
+import { ConnectFn, DWPConfig, ModalProvider } from '../types';
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { toast } from 'react-toastify';
@@ -7,10 +7,11 @@ import Web3Modal from 'web3modal';
 
 import { supportedChains } from '../chains';
 
-const useListeners = (
+export const useProviderListeners = (
   web3Modal: Web3Modal,
   connectDefaultProvider: () => void,
-  connect: ConnectFn
+  connect: ConnectFn,
+  config: DWPConfig
 ) => {
   const [modalProvider, setModalProvider] = useState<ModalProvider | null>(null);
 
@@ -18,8 +19,8 @@ const useListeners = (
     // subscribe to connect events
     web3Modal.on('connect', _modalProvider => {
       // check that connected chain is supported
-      if (!supportedChains().includes(parseInt(_modalProvider.chainId))) {
-        toast(`Switch to a supported chain: ${supportedChains().join(', ')}`, {
+      if (!supportedChains(config).includes(parseInt(_modalProvider.chainId))) {
+        toast(`Switch to a supported chain: ${supportedChains(config).join(', ')}`, {
           toastId: 'switchChain',
         });
         // switch to a default provider
@@ -36,9 +37,9 @@ const useListeners = (
 
   useEffect(() => {
     const chainChangedCallback = (chainId: string) => {
-      if (!supportedChains().includes(parseInt(chainId))) {
+      if (!supportedChains(config).includes(parseInt(chainId))) {
         // check that connected chain is supported
-        toast(`Chain changed: Switch to a supported chain: ${supportedChains().join(', ')}`, {
+        toast(`Chain changed: Switch to a supported chain: ${supportedChains(config).join(', ')}`, {
           toastId: 'switchChain',
         });
         // switch to a default provider
@@ -93,5 +94,3 @@ const useListeners = (
     };
   }, [modalProvider, web3Modal, connectDefaultProvider, connect]);
 };
-
-export { useListeners };

@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
 import Web3Modal from 'web3modal';
-import type { ConnectFn, DisconnectFn, InitialState } from './types';
+import type { ConnectFn, DisconnectFn, DWPConfig, InitialState } from './types';
 import { ActionTypes, Web3ProviderActions } from './actions';
 import { WEB3_MODAL_CONFIG } from './web3Modal.config';
 import { getLocalProvider, getFallbackProvider, getInjectedProvider } from './utils/helpers';
 import { toast } from 'react-toastify';
-import { useListeners } from './hooks/useProviderListeners';
+import { useProviderListeners } from './hooks/useProviderListeners';
 import { supportedChains } from './chains';
 import { Web3ProviderContext } from './hooks/useWeb3Provider';
 
@@ -65,27 +65,28 @@ const reducer = (state: InitialState, action: ActionTypes) => {
   }
 };
 
-export function Web3Provider({ children }: { children: React.ReactNode }) {
+export function Web3Provider({ config, children }: { config: DWPConfig, children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, getInitialState());
 
   const connectDefaultProvider = useCallback(async () => {
     web3Modal.clearCachedProvider();
-    if (process.env.REACT_APP_LOCAL_PROVIDER_URL && process.env.NODE_ENV === 'development') {
+    const isLocalDevelopment = config.local && config.isDev && config.local.localChainId && config.local.providerURL
+    if (isLocalDevelopment) {
       dispatch({
         type: Web3ProviderActions.SET_LOCAL_PROVIDER,
-        payload: await getLocalProvider(),
+        payload: await getLocalProvider(config),
       });
     } else {
       dispatch({
         type: Web3ProviderActions.SET_FALLBACK_PROVIDER,
-        payload: getFallbackProvider(),
+        payload: getFallbackProvider(config),
       });
     }
   }, []);
 
   const connect: ConnectFn = useCallback(async () => {
-    const userInjectedProvider = await getInjectedProvider(web3Modal);
-    if (supportedChains().includes(userInjectedProvider.chainId)) {
+    const userInjectedProvider = await getInjectedProvider(web3Modal, config);
+    if (supportedChains(config).includes(userInjectedProvider.chainId)) {
       dispatch({
         type: Web3ProviderActions.SET_INJECTED_PROVIDER,
         payload: userInjectedProvider,
@@ -101,7 +102,7 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
     connectDefaultProvider();
   }, [connectDefaultProvider]);
 
-  useListeners(web3Modal, connectDefaultProvider, connect);
+  useProviderListeners(web3Modal, connectDefaultProvider, connect, config);
 
   const load = useCallback(() => {
     if (web3Modal.cachedProvider) {
