@@ -70,7 +70,7 @@ export function Web3Provider({ config, children }: { config: DWPConfig, children
 
   const connectDefaultProvider = useCallback(async () => {
     web3Modal.clearCachedProvider();
-    const isLocalDevelopment = config.local && config.isDev && config.local.localChainId && config.local.providerURL
+    const isLocalDevelopment = process.env.NODE_ENV === 'development' && !!config.localChainId && !!config.providerURL
     if (isLocalDevelopment) {
       dispatch({
         type: Web3ProviderActions.SET_LOCAL_PROVIDER,

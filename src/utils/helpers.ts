@@ -8,9 +8,9 @@ export const makeInjectedProvider = async (
   config: DWPConfig
 ): Promise<InjectedProviderInfo> => {
   const local =
-    config.local && config.local.localChainId &&
+    config.localChainId &&
     (await web3Provider.getNetwork()).chainId ===
-    parseInt(config.local.localChainId, 10);
+    parseInt(config.localChainId, 10);
 
   const signer = web3Provider.getSigner();
   return {
@@ -39,7 +39,7 @@ export const getInjectedProvider = (
 };
 
 export const getLocalProvider = (config: DWPConfig): Promise<BaseProviderInfo> => {
-  const localProvider = new ethers.providers.JsonRpcProvider(config.local!.providerURL);
+  const localProvider = new ethers.providers.JsonRpcProvider(config.providerURL);
   return new Promise<BaseProviderInfo>((resolve, reject) => {
     localProvider
       .detectNetwork()
