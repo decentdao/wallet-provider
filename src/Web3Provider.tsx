@@ -3,7 +3,7 @@ import Web3Modal from 'web3modal';
 import type { ConnectFn, DisconnectFn, DWPConfig, InitialState } from './types';
 import { ActionTypes, Web3ProviderActions } from './actions';
 import { WEB3_MODAL_CONFIG } from './web3Modal.config';
-import { getLocalProvider, getFallbackProvider, getInjectedProvider } from './utils/helpers';
+import { getLocalProvider, getFallbackProvider, getInjectedProvider } from './helpers';
 import { toast } from 'react-toastify';
 import { useProviderListeners } from './hooks/useProviderListeners';
 import { supportedChains } from './chains';

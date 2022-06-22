@@ -1,4 +1,4 @@
-import { DWPConfig } from './../types/index';
+import { DWPConfig } from '../types/index';
 import Web3Modal from 'web3modal';
 import { ethers, getDefaultProvider } from 'ethers';
 import { InjectedProviderInfo, BaseProviderInfo, ProviderApiKeys } from '../types';
