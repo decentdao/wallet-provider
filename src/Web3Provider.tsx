@@ -65,12 +65,19 @@ const reducer = (state: InitialState, action: ActionTypes) => {
   }
 };
 
-export function Web3Provider({ config, children }: { config: DWPConfig, children: React.ReactNode }) {
+export function Web3Provider({
+  config,
+  children,
+}: {
+  config: DWPConfig;
+  children: React.ReactNode;
+}) {
   const [state, dispatch] = useReducer(reducer, getInitialState());
 
   const connectDefaultProvider = useCallback(async () => {
     web3Modal.clearCachedProvider();
-    const isLocalDevelopment = process.env.NODE_ENV === 'development' && !!config.localChainId && !!config.providerURL
+    const isLocalDevelopment =
+      process.env.NODE_ENV === 'development' && !!config.localChainId && !!config.providerURL;
     if (isLocalDevelopment) {
       dispatch({
         type: Web3ProviderActions.SET_LOCAL_PROVIDER,
@@ -82,7 +89,7 @@ export function Web3Provider({ config, children }: { config: DWPConfig, children
         payload: getFallbackProvider(config),
       });
     }
-  }, []);
+  }, [config]);
 
   const connect: ConnectFn = useCallback(async () => {
     const userInjectedProvider = await getInjectedProvider(web3Modal, config);
@@ -94,7 +101,7 @@ export function Web3Provider({ config, children }: { config: DWPConfig, children
     } else {
       connectDefaultProvider();
     }
-  }, [connectDefaultProvider]);
+  }, [connectDefaultProvider, config]);
 
   const disconnect: DisconnectFn = useCallback(() => {
     toast('Account disconnected', { toastId: 'disconnected' });

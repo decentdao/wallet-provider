@@ -1,7 +1,6 @@
-import { DWPConfig } from '../types/index';
+import { DWPConfig, InjectedProviderInfo, BaseProviderInfo, ProviderApiKeys } from '../types/index';
 import Web3Modal from 'web3modal';
 import { ethers, getDefaultProvider } from 'ethers';
-import { InjectedProviderInfo, BaseProviderInfo, ProviderApiKeys } from '../types';
 
 export const makeInjectedProvider = async (
   web3Provider: ethers.providers.Web3Provider,
@@ -9,8 +8,7 @@ export const makeInjectedProvider = async (
 ): Promise<InjectedProviderInfo> => {
   const local =
     config.localChainId &&
-    (await web3Provider.getNetwork()).chainId ===
-    parseInt(config.localChainId, 10);
+    (await web3Provider.getNetwork()).chainId === parseInt(config.localChainId, 10);
 
   const signer = web3Provider.getSigner();
   return {
@@ -58,12 +56,9 @@ export const getLocalProvider = (config: DWPConfig): Promise<BaseProviderInfo> =
 
 export const getFallbackProvider = (config: DWPConfig): BaseProviderInfo => {
   const providerApiKeys: ProviderApiKeys = {};
-  if (config.providerKeys.infura)
-    providerApiKeys.infura = config.providerKeys.infura;
-  if (config.providerKeys.alchemy)
-    providerApiKeys.alchemy = config.providerKeys.alchemy;
-  if (config.providerKeys.etherscan)
-    providerApiKeys.etherscan = config.providerKeys.etherscan;
+  if (config.providerKeys.infura) providerApiKeys.infura = config.providerKeys.infura;
+  if (config.providerKeys.alchemy) providerApiKeys.alchemy = config.providerKeys.alchemy;
+  if (config.providerKeys.etherscan) providerApiKeys.etherscan = config.providerKeys.etherscan;
 
   const network = ethers.providers.getNetwork(parseInt(config.fallbackChainId || '0', 10));
   const defaultProvider = getDefaultProvider(network, providerApiKeys);

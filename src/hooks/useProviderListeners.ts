@@ -33,7 +33,7 @@ export const useProviderListeners = (
     return () => {
       web3Modal.off('connect');
     };
-  }, [web3Modal, connectDefaultProvider]);
+  }, [web3Modal, connectDefaultProvider, config]);
 
   useEffect(() => {
     const chainChangedCallback = (chainId: string) => {
@@ -92,5 +92,5 @@ export const useProviderListeners = (
         (modalProvider as ethers.providers.Web3Provider).removeAllListeners();
       }
     };
-  }, [modalProvider, web3Modal, connectDefaultProvider, connect]);
+  }, [modalProvider, web3Modal, connectDefaultProvider, connect, config]);
 };

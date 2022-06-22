@@ -9,5 +9,5 @@ export const WEB3_MODAL_CONFIG = {
         infuraId: process.env.REACT_APP_INFURA_API_KEY,
       },
     },
-  }
+  },
 };

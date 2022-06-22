@@ -6,7 +6,6 @@
     "extends": [
         "plugin:react/recommended",
         "plugin:import/recommended",
-        "react-app/jest",
         "airbnb-typescript/base"
     ],
     "parser": "@typescript-eslint/parser",
@@ -76,6 +75,13 @@
         // var rules
         "no-use-before-define": "off",
         "@typescript-eslint/no-use-before-define": "error",
-        "@typescript-eslint/no-unused-vars": "warn"
+        "@typescript-eslint/no-unused-vars": "warn",
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "optionalDependencies": false,
+                "peerDependencies": false
+            }
+        ]
     }
 }

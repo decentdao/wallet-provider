@@ -44,9 +44,9 @@ export type ProviderApiKeys = {
 };
 
 export interface DWPConfig {
-  providerKeys: ProviderApiKeys,
-  localChainId?: string,
-  providerURL?: string,
-  fallbackChainId: string,
-  supportedChains: string, // 3,4 chains seperated by commas
+  providerKeys: ProviderApiKeys;
+  localChainId?: string;
+  providerURL?: string;
+  fallbackChainId: string;
+  supportedChains: string; // 3,4 chains seperated by commas
 }
