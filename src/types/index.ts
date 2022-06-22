@@ -50,3 +50,11 @@ export interface DWPConfig {
   fallbackChainId: string;
   supportedChains: string; // 3,4 chains seperated by commas
 }
+
+export interface ModalTheme {
+  background: string;
+  main: string;
+  secondary: string;
+  border: string;
+  hover: string;
+}

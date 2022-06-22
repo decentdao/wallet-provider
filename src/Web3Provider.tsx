@@ -1,15 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
 import Web3Modal from 'web3modal';
-import type { ConnectFn, DisconnectFn, DWPConfig, InitialState } from './types';
+import type { ConnectFn, DisconnectFn, DWPConfig, InitialState, ModalTheme } from './types';
 import { ActionTypes, Web3ProviderActions } from './actions';
-import { WEB3_MODAL_CONFIG } from './helpers/web3ModalConfig';
+import { getWeb3modalOptions } from './helpers/web3ModalConfig';
 import { getLocalProvider, getFallbackProvider, getInjectedProvider } from './helpers';
 import { toast } from 'react-toastify';
 import { useProviderListeners } from './hooks/useProviderListeners';
 import { supportedChains } from './chains';
 import { Web3ProviderContext } from './hooks/useWeb3Provider';
 
-const web3Modal = new Web3Modal(WEB3_MODAL_CONFIG);
 const initialState: InitialState = {
   account: null,
   signerOrProvider: null,
@@ -57,7 +56,6 @@ const reducer = (state: InitialState, action: ActionTypes) => {
       };
     }
     case Web3ProviderActions.DISCONNECT_WALLET: {
-      web3Modal.clearCachedProvider();
       return { ...initialState };
     }
     default:
@@ -67,12 +65,15 @@ const reducer = (state: InitialState, action: ActionTypes) => {
 
 export function Web3Provider({
   config,
+  theme,
   children,
 }: {
   config: DWPConfig;
+  theme?: string | ModalTheme;
   children: React.ReactNode;
 }) {
   const [state, dispatch] = useReducer(reducer, getInitialState());
+  const web3Modal = useMemo(() => new Web3Modal(getWeb3modalOptions(theme)), [theme]);
 
   const connectDefaultProvider = useCallback(async () => {
     web3Modal.clearCachedProvider();
@@ -89,7 +90,7 @@ export function Web3Provider({
         payload: getFallbackProvider(config),
       });
     }
-  }, [config]);
+  }, [config, web3Modal]);
 
   const connect: ConnectFn = useCallback(async () => {
     const userInjectedProvider = await getInjectedProvider(web3Modal, config);
@@ -101,7 +102,7 @@ export function Web3Provider({
     } else {
       connectDefaultProvider();
     }
-  }, [connectDefaultProvider, config]);
+  }, [connectDefaultProvider, config, web3Modal]);
 
   const disconnect: DisconnectFn = useCallback(() => {
     toast('Account disconnected', { toastId: 'disconnected' });
@@ -117,7 +118,7 @@ export function Web3Provider({
       return;
     }
     connectDefaultProvider();
-  }, [connect, connectDefaultProvider]);
+  }, [connect, connectDefaultProvider, web3Modal]);
 
   useEffect(() => load(), [load]);
 
