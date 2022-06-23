@@ -114,7 +114,6 @@ export function Web3Provider({
 
   const load = useCallback(async () => {
     if (web3Modal.cachedProvider) {
-      console.log('ONLY ONCE');
       await connect();
     } else {
       connectDefaultProvider();
