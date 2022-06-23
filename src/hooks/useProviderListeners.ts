@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 
-import { logging } from '../logging';
-
 export const useProviderListeners = (
   web3Modal: Web3Modal,
   connectDefaultProvider: () => void,
@@ -19,16 +17,12 @@ export const useProviderListeners = (
     web3Modal.on('connect', _modalProvider => {
       // check that connected chain is supported
       if (!config.supportedChains.includes(parseInt(_modalProvider.chainId))) {
-        logging(
-          'error',
-          'Provider Error',
-          `Switch to a supported chain: ${config.supportedChains.join(', ')}`
-        );
+        // @todo add 'unsupported network' event
         // switch to a default provider
         connectDefaultProvider();
       } else {
         setModalProvider(_modalProvider);
-        logging('info', 'Wallet Action', `Account connected: ${_modalProvider.selectedAddress}`);
+        // @todo add 'connect' event
       }
     });
     return () => {
@@ -39,34 +33,29 @@ export const useProviderListeners = (
   useEffect(() => {
     const chainChangedCallback = (chainId: string) => {
       if (!config.supportedChains.includes(parseInt(chainId))) {
-        // check that connected chain is supported
-        logging(
-          'error',
-          'Provider Error',
-          `Switch to a supported chain: ${config.supportedChains.join(', ')}`
-        );
+        // @todo add 'unsupported network' event
         // switch to a default provider
         connectDefaultProvider();
       } else {
-        logging('info', 'Wallet Action', `Chain id updated: ${chainId}`);
+        // @todo add 'network changed' event
         connect();
       }
     };
 
     const accountsChangedCallback = (accounts: string[]) => {
       if (!accounts.length) {
-        logging('error', 'Wallet Action', 'Account access revoked');
+        // @todo add 'access revoked' event
         // switch to a default provider
         connectDefaultProvider();
         // remove listeners
         setModalProvider(null);
       } else {
-        logging('info', 'Wallet Action', 'Account changed');
+        // @todo add 'account changed event' event
         connect();
       }
     };
     const disconnectCallback = () => {
-      logging('error', 'Wallet Action', 'Account access revoked');
+      // @todo add 'access revoked' event
       // switch to a default provider
       connectDefaultProvider();
       // remove listeners

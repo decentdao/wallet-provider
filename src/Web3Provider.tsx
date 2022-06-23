@@ -6,7 +6,6 @@ import { getWeb3modalOptions } from './helpers/web3ModalConfig';
 import { getLocalProvider, getFallbackProvider, getInjectedProvider } from './helpers';
 import { useProviderListeners } from './hooks/useProviderListeners';
 import { Web3ProviderContext } from './hooks/useWeb3Provider';
-import { logging } from './logging';
 
 const initialState: InitialState = {
   account: null,
@@ -105,7 +104,7 @@ export function Web3Provider({
   }, [connectDefaultProvider, config, web3Modal]);
 
   const disconnect: DisconnectFn = useCallback(() => {
-    logging('info', 'Wallet Action', 'Account Disconnected');
+    // @todo add 'account disconnected' event
     // switch to a default provider
     connectDefaultProvider();
   }, [connectDefaultProvider]);
