@@ -15,8 +15,13 @@
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "clean": "rm -rf dist",
+    "clean:node_modules": "rm -rf node_modules && cd sandbox && rm -rf node_modules",
+    "clean:all": "npm run clean && npm run clean:node_modules",
+    "package:install": "npm run clean:all && npm install && cd sandbox && npm install",
     "build": "npm run clean && microbundle --jsx React.createElement && cp package.json README.md ./dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "set:link": "cd sandbox && npm link @decent-dao/wallet-provider",
+    "build:link": "npm run build && cd ./dist && npm link && cd .. && npm run set:link",
+    "start": "cd sandbox && npm run start"
   },
   "author": "Decent DAO",
   "license": "MIT",
@@ -36,7 +41,7 @@
     "react": "16.14.0",
     "react-dom": "16.14.0",
     "typescript": "^4.7.4",
-    "eslint": "^8.18.0",
+    "eslint": "^7.11.0",
     "prettier": "^2.7.1",
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
