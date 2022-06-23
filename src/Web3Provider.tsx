@@ -5,7 +5,6 @@ import { ActionTypes, Web3ProviderActions } from './actions';
 import { getWeb3modalOptions } from './helpers/web3ModalConfig';
 import { getLocalProvider, getFallbackProvider, getInjectedProvider } from './helpers';
 import { useProviderListeners } from './hooks/useProviderListeners';
-import { supportedChains } from './chains';
 import { Web3ProviderContext } from './hooks/useWeb3Provider';
 import { logging } from './logging';
 
@@ -95,7 +94,7 @@ export function Web3Provider({
 
   const connect: ConnectFn = useCallback(async () => {
     const userInjectedProvider = await getInjectedProvider(web3Modal, config);
-    if (supportedChains(config).includes(userInjectedProvider.chainId)) {
+    if (config.supportedChains.includes(userInjectedProvider.chainId)) {
       dispatch({
         type: Web3ProviderActions.SET_INJECTED_PROVIDER,
         payload: userInjectedProvider,

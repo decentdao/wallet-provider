@@ -11,7 +11,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <Web3Provider config={web3ProviderConfig} theme="light">
+    <Web3Provider config={web3ProviderConfig()} theme="light">
       <App />
     </Web3Provider>
   </React.StrictMode>

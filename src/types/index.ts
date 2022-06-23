@@ -48,7 +48,7 @@ export interface DWPConfig {
   localChainId?: string;
   localProviderURL?: string;
   fallbackChainId: string;
-  supportedChains: string; // 3,4 chains seperated by commas
+  supportedChains: number[];
 }
 
 export interface ModalTheme {

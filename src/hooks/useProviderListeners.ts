@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
 
-import { supportedChains } from '../chains';
 import { logging } from '../logging';
 
 export const useProviderListeners = (
@@ -19,11 +18,11 @@ export const useProviderListeners = (
     // subscribe to connect events
     web3Modal.on('connect', _modalProvider => {
       // check that connected chain is supported
-      if (!supportedChains(config).includes(parseInt(_modalProvider.chainId))) {
+      if (!config.supportedChains.includes(parseInt(_modalProvider.chainId))) {
         logging(
           'error',
           'Provider Error',
-          `Switch to a supported chain: ${supportedChains(config).join(', ')}`
+          `Switch to a supported chain: ${config.supportedChains.join(', ')}`
         );
         // switch to a default provider
         connectDefaultProvider();
@@ -39,12 +38,12 @@ export const useProviderListeners = (
 
   useEffect(() => {
     const chainChangedCallback = (chainId: string) => {
-      if (!supportedChains(config).includes(parseInt(chainId))) {
+      if (!config.supportedChains.includes(parseInt(chainId))) {
         // check that connected chain is supported
         logging(
           'error',
           'Provider Error',
-          `Switch to a supported chain: ${supportedChains(config).join(', ')}`
+          `Switch to a supported chain: ${config.supportedChains.join(', ')}`
         );
         // switch to a default provider
         connectDefaultProvider();
