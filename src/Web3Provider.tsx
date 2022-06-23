@@ -4,10 +4,10 @@ import type { ConnectFn, DisconnectFn, DWPConfig, InitialState, ModalTheme } fro
 import { ActionTypes, Web3ProviderActions } from './actions';
 import { getWeb3modalOptions } from './helpers/web3ModalConfig';
 import { getLocalProvider, getFallbackProvider, getInjectedProvider } from './helpers';
-import { toast } from 'react-toastify';
 import { useProviderListeners } from './hooks/useProviderListeners';
 import { supportedChains } from './chains';
 import { Web3ProviderContext } from './hooks/useWeb3Provider';
+import { logging } from './logging';
 
 const initialState: InitialState = {
   account: null,
@@ -105,22 +105,25 @@ export function Web3Provider({
   }, [connectDefaultProvider, config, web3Modal]);
 
   const disconnect: DisconnectFn = useCallback(() => {
-    toast('Account disconnected', { toastId: 'disconnected' });
+    logging('info', 'Wallet Action', 'Account Disconnected');
     // switch to a default provider
     connectDefaultProvider();
   }, [connectDefaultProvider]);
 
   useProviderListeners(web3Modal, connectDefaultProvider, connect, config);
 
-  const load = useCallback(() => {
+  const load = useCallback(async () => {
     if (web3Modal.cachedProvider) {
-      connect();
-      return;
+      console.log('ONLY ONCE');
+      await connect();
+    } else {
+      connectDefaultProvider();
     }
-    connectDefaultProvider();
   }, [connect, connectDefaultProvider, web3Modal]);
 
-  useEffect(() => load(), [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const contextValue = useMemo(
     () => ({

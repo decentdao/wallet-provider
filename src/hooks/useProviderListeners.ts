@@ -2,10 +2,10 @@ import WalletConnectProvider from '@walletconnect/ethereum-provider';
 import { ConnectFn, DWPConfig, ModalProvider } from '../types';
 import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { toast } from 'react-toastify';
 import Web3Modal from 'web3modal';
 
 import { supportedChains } from '../chains';
+import { logging } from '../logging';
 
 export const useProviderListeners = (
   web3Modal: Web3Modal,
@@ -20,14 +20,16 @@ export const useProviderListeners = (
     web3Modal.on('connect', _modalProvider => {
       // check that connected chain is supported
       if (!supportedChains(config).includes(parseInt(_modalProvider.chainId))) {
-        toast(`Switch to a supported chain: ${supportedChains(config).join(', ')}`, {
-          toastId: 'switchChain',
-        });
+        logging(
+          'log',
+          'Provider Error',
+          `Switch to a supported chain: ${supportedChains(config).join(', ')}`
+        );
         // switch to a default provider
         connectDefaultProvider();
       } else {
         setModalProvider(_modalProvider);
-        toast('Connected', { toastId: 'connected' });
+        logging('info', 'Wallet Action', `Account connected: ${_modalProvider.selectedAddress}`);
       }
     });
     return () => {
@@ -39,33 +41,33 @@ export const useProviderListeners = (
     const chainChangedCallback = (chainId: string) => {
       if (!supportedChains(config).includes(parseInt(chainId))) {
         // check that connected chain is supported
-        toast(`Chain changed: Switch to a supported chain: ${supportedChains(config).join(', ')}`, {
-          toastId: 'switchChain',
-        });
+        logging(
+          'warn',
+          'Provider Error',
+          `Switch to a supported chain: ${supportedChains(config).join(', ')}`
+        );
         // switch to a default provider
         connectDefaultProvider();
       } else {
-        toast(`Chain changed: ${chainId}`, {
-          toastId: 'connected',
-        });
+        logging('info', 'Wallet Action', `Chain id updated: ${chainId}`);
         connect();
       }
     };
 
     const accountsChangedCallback = (accounts: string[]) => {
       if (!accounts.length) {
-        toast('Account access revoked', { toastId: 'accessChanged' });
+        logging('error', 'Wallet Action', 'Account access revoked');
         // switch to a default provider
         connectDefaultProvider();
         // remove listeners
         setModalProvider(null);
       } else {
-        toast('Account changed', { toastId: 'connected' });
+        logging('info', 'Wallet Action', 'Account changed');
         connect();
       }
     };
     const disconnectCallback = () => {
-      toast('Account disconnected', { toastId: 'disconnected' });
+      logging('error', 'Wallet Action', 'Account access revoked');
       // switch to a default provider
       connectDefaultProvider();
       // remove listeners
