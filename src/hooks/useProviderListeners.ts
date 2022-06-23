@@ -21,7 +21,7 @@ export const useProviderListeners = (
       // check that connected chain is supported
       if (!supportedChains(config).includes(parseInt(_modalProvider.chainId))) {
         logging(
-          'log',
+          'error',
           'Provider Error',
           `Switch to a supported chain: ${supportedChains(config).join(', ')}`
         );
@@ -42,7 +42,7 @@ export const useProviderListeners = (
       if (!supportedChains(config).includes(parseInt(chainId))) {
         // check that connected chain is supported
         logging(
-          'warn',
+          'error',
           'Provider Error',
           `Switch to a supported chain: ${supportedChains(config).join(', ')}`
         );
