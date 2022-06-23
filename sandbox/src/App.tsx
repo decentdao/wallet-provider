@@ -10,6 +10,12 @@ function App() {
     connect,
     disconnect,
   } = useWeb3Provider();
+
+  const signMessage = async () => {
+    const msg = 'Hello World!'
+      const signature = await (signerOrProvider as any)!.signMessage(msg);
+      console.info("Signature", signature)
+  }
   return (
     <div className="app-wrapper">
       <h1 className="title">Decent Wallet Provider</h1>
@@ -41,14 +47,20 @@ function App() {
       </Container>
       <div className="button-flex-container">
         <Button
-          className="connect-button"
           label="Connect"
           onClick={connect}
+          disabled={!!account}
+        />
+        <Button
+          label="Sign Message"
+          onClick={signMessage}
+          disabled={!account}
         />
         <Button
           className="disconnect-button"
           label="Disconnect"
           onClick={disconnect}
+          disabled={!account}
         />
       </div>
     </div>

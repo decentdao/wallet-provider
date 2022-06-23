@@ -1,15 +1,20 @@
 .sandbox-button {
-  padding: 1em 2em;
-  font-size: 1em;
+  padding: 0.5em 1em;
+  font-size: small;
   letter-spacing: 0.2em;
+  border-radius: 0.4em;
   font-weight: 700;
-}
-
-.sandbox-button.connect-button {
-  background-color: lightblue;
+  cursor: pointer;
+  background-color: darkmagenta;
+  color: ghostwhite;
 }
 
 .sandbox-button.disconnect-button {
   background-color: darkred;
-  color: ghostwhite;
+}
+
+.sandbox-button:disabled {
+  background-color: grey;
+  color: black;
+  cursor: default;
 }
