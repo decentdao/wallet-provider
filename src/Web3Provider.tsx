@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer, useRef } from 'react';
 import Web3Modal from 'web3modal';
 import type { ConnectFn, DisconnectFn, DWPConfig, InitialState, ModalTheme } from './types';
 import { ActionTypes, Web3ProviderActions } from './actions';
@@ -74,6 +74,7 @@ export function Web3Provider({
 }) {
   const [state, dispatch] = useReducer(reducer, getInitialState());
   const web3Modal = useMemo(() => new Web3Modal(getWeb3modalOptions(theme)), [theme]);
+  const didMountRef = useRef(false);
 
   const connectDefaultProvider = useCallback(async () => {
     web3Modal.clearCachedProvider();
@@ -113,11 +114,14 @@ export function Web3Provider({
   useProviderListeners(web3Modal, connectDefaultProvider, connect, config);
 
   const load = useCallback(async () => {
-    if (web3Modal.cachedProvider) {
-      await connect();
-    } else {
-      connectDefaultProvider();
+    if (didMountRef.current) {
+      if (web3Modal.cachedProvider) {
+        await connect();
+      } else {
+        connectDefaultProvider();
+      }
     }
+    didMountRef.current = true;
   }, [connect, connectDefaultProvider, web3Modal]);
 
   useEffect(() => {
