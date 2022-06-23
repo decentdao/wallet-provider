@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { web3ProviderConfig } from './providerConfig';
-import { Web3Provider } from '@decent-dao/wallet-provider';
+import { Web3Provider } from '@decent-org/wallet-provider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

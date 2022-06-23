@@ -2,7 +2,7 @@ import './components/styles/main.css';
 import { Container } from './components/Container';
 import { ConnectionProperty } from './components/ConnectionProperty';
 import { Button } from './components/Button';
-import { useWeb3Provider } from '@decent-dao/wallet-provider';
+import { useWeb3Provider } from '@decent-org/wallet-provider';
 
 function App() {
   const {

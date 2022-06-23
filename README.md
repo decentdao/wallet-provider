@@ -44,6 +44,8 @@ and then add `config-overrifdes.js` from the `sandbox` to allow for these `node`
 `Web3Provider.tsx` exports an `Context.provider` that will pass provider state data through the component tree.
 
 ```tsx
+import { Web3Provider } from '@decent-org/wallet-provider'
+
 ReactDOM.render(
   <Web3Provider config={config} theme={theme}>
     <App />
@@ -97,6 +99,8 @@ export interface IWeb3ProviderContext {
 ```
 
 ```tsx
+import { useWeb3Provider } from '@decent-org/wallet-provider';
+
 function Component() {
   const { state: { account, chaindId, network, connectionType } } = useWeb3Provider();
 
@@ -119,6 +123,8 @@ function Component() {
 ### Connecting and Disconnect to Wallet
 
 ```tsx
+import { useWeb3Provider } from '@decent-org/wallet-provider';
+
 function Component() {
   const { state: { account },  connect, disconnect } = useWeb3Provider();
 

@@ -1,4 +1,4 @@
-import { parseChainsIds } from '@decent-dao/wallet-provider';
+import { parseChainsIds } from '@decent-org/wallet-provider';
 
 export const web3ProviderConfig = () => {
   const infura = process.env.REACT_APP_INFURA_API_KEY
