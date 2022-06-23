@@ -12,7 +12,7 @@ function App() {
   } = useWeb3Provider();
   return (
     <div className="app-wrapper">
-      <h1 className="title">Connection Info</h1>
+      <h1 className="title">Decent Wallet Provider</h1>
       <Container>
         <ConnectionProperty
           label="Connection Type"

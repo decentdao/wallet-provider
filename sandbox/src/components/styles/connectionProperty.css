@@ -1,14 +1,20 @@
 .connection-property {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1em;
 }
 
 .connection-property .label {
   font-weight: 700;
   letter-spacing: 2px;
-
+  color: yellow;
+  background-color: black;
+  padding: 0.5em;
+  font-size: small;
+  border-radius: 0.5em;
 }
 
 .connection-property .value {
-  color: #F4F4A2;
+  color:whitesmoke;
 }

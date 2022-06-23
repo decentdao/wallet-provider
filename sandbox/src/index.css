@@ -13,5 +13,6 @@ code {
 }
 
 html {
-  background-color: blueviolet;
+  background: linear-gradient(126deg, #39105E, #1E1751);
+  min-height: 100vh;
 }
