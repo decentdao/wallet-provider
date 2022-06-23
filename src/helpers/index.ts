@@ -37,7 +37,7 @@ export const getInjectedProvider = (
 };
 
 export const getLocalProvider = (config: DWPConfig): Promise<BaseProviderInfo> => {
-  const localProvider = new ethers.providers.JsonRpcProvider(config.providerURL);
+  const localProvider = new ethers.providers.JsonRpcProvider(config.localProviderURL);
   return new Promise<BaseProviderInfo>((resolve, reject) => {
     localProvider
       .detectNetwork()

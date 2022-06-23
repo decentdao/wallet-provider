@@ -78,7 +78,7 @@ export function Web3Provider({
   const connectDefaultProvider = useCallback(async () => {
     web3Modal.clearCachedProvider();
     const isLocalDevelopment =
-      process.env.NODE_ENV === 'development' && !!config.localChainId && !!config.providerURL;
+      process.env.NODE_ENV === 'development' && !!config.localChainId && !!config.localProviderURL;
     if (isLocalDevelopment) {
       dispatch({
         type: Web3ProviderActions.SET_LOCAL_PROVIDER,

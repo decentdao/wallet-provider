@@ -6,7 +6,7 @@ export const web3ProviderConfig = {
   },
   local: {
     localChainId: process.env.REACT_APP_LOCAL_CHAIN_ID,
-    providerURL: process.env.REACT_APP_LOCAL_PROVIDER_URL,
+    localProviderURL: process.env.REACT_APP_LOCAL_PROVIDER_URL,
   },
   fallbackChainId: process.env.REACT_APP_FALLBACK_CHAIN_ID || "",
   supportedChains: process.env.REACT_APP_SUPPORTED_CHAIN_IDS || "", // 3,4 chains seperated by commas
