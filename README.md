@@ -2,7 +2,6 @@
 Built on top of [Web3 Modal](https://web3modal.com) to connect Ethereum (EVM) wallets.
 
 ## Supported Wallets
--------------------
 <br />
 
 ### Injected Wallets
@@ -19,7 +18,6 @@ Using WalletConnect Provider, allows connection to mobile and supported desktop 
 
 
 ## Getting Started
--------------------
 
 ### Installation
 
@@ -88,7 +86,6 @@ This property is optional. See [web3modal](https://github.com/Web3Modal/web3moda
 
 
 ## Usage
--------------------
 using the `useWeb3Provider()` hook in `hooks/useWeb3Provider.ts` you now have access to the Wallet Provider and connection information within state. For Typed Definition see `types.ts`
 
 ```ts
@@ -157,7 +154,6 @@ function Component() {
 <br />
 
 ## Local Development
--------------------
 Some scripts have been created to help get going quickly
 
 <br />
