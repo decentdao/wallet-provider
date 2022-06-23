@@ -19,8 +19,9 @@
     "clean:all": "npm run clean && npm run clean:node_modules",
     "package:install": "npm run clean:all && npm install && cd sandbox && npm install",
     "build": "npm run clean && microbundle --jsx React.createElement && cp package.json README.md ./dist",
+    "create:link": "cd ./dist && npm link && cd ..",
     "set:link": "cd sandbox && npm link @decent-dao/wallet-provider",
-    "build:link": "npm run lint:fix && npm run build && cd ./dist && npm link && cd .. && npm run set:link",
+    "build:link": "npm run lint:fix && npm run build && npm run create:link && npm run set:link",
     "start": "cd sandbox && npm run start"
   },
   "author": "Decent DAO",
