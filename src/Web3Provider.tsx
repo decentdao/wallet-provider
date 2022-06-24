@@ -68,7 +68,7 @@ export function Web3Provider({
 }: {
   config: DWPConfig;
   theme?: string | ModalTheme;
-  children: React.ReactNode;
+  children: any;
 }) {
   const [state, dispatch] = useReducer(reducer, getInitialState());
   const web3Modal = useMemo(() => new Web3Modal(getWeb3modalOptions(theme)), [theme]);
