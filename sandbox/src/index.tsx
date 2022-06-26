@@ -9,6 +9,7 @@ import { Web3Provider } from '@decent-org/wallet-provider';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
     <Web3Provider config={web3ProviderConfig()} theme="light">
