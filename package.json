@@ -1,6 +1,6 @@
 {
   "name": "@decent-org/wallet-provider",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Using ![Web3 Modal](https://web3modal.com) to connect Ethereum or EVM supported wallets.",
   "source": "src/index.ts",
   "main": "dist/index.js",

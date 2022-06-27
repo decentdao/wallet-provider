@@ -1,6 +1,6 @@
 # Decent Wallet Provider
 
-Connect easily to Ethereum wallets with the power of [Web3 Modal](https://web3modal.com). Built with flexibility in mind for easily connecting with your favorite wallet to your application.
+ Built with the help of [Web3 Modal](https://web3modal.com). Connects easily to EVM wallets and with the aid of a Provider Component (React Context Api) and a custom hook. Connect to your favorite wallets and using the custom hook, [ethers](https://docs.ethers.io/v5/)'s Web3Provider to interact with the blockchain quickly.
 
 ## Supported Wallets
 
