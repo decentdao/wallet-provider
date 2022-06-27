@@ -1,65 +1,65 @@
-import WalletConnectProvider from '@walletconnect/ethereum-provider';
-import { ConnectFn, DWPConfig, ModalProvider } from '../types';
-import { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
+import { DWPConfig } from '../types';
+import { useState, useEffect, useMemo } from 'react';
 import Web3Modal from 'web3modal';
 
 export const useProviderListeners = (
   web3Modal: Web3Modal,
-  connectDefaultProvider: () => void,
-  connect: ConnectFn,
-  config: DWPConfig
+  config: DWPConfig,
+  connectDefaultProvider: () => Promise<void>,
+  account: string | null
 ) => {
-  const [modalProvider, setModalProvider] = useState<ModalProvider | null>(null);
+  const [modalProvider, setModalProvider] = useState<any>(null);
+
+  const isConnected = useMemo(() => !!account, [account]);
+
+  useEffect(() => {
+    if (!isConnected) {
+      setModalProvider(null);
+    }
+  }, [isConnected]);
 
   useEffect(() => {
     // subscribe to connect events
-    web3Modal.on('connect', _modalProvider => {
+    web3Modal.on('connect', async _modalProvider => {
       // check that connected chain is supported
-      if (!config.supportedChains.includes(parseInt(_modalProvider.chainId))) {
-        // @todo add 'unsupported network' event
-        // switch to a default provider
-        connectDefaultProvider();
-      } else {
+      if (config.supportedChains.includes(parseInt(_modalProvider.chainId))) {
         setModalProvider(_modalProvider);
-        // @todo add 'connect' event
+      } else if (config.supportedChains.includes(parseInt(config.fallbackChainId))) {
+        await connectDefaultProvider();
+        setModalProvider(null);
+      } else {
+        // @todo event cannot connect
+        setModalProvider(null);
       }
     });
     return () => {
       web3Modal.off('connect');
     };
-  }, [web3Modal, connectDefaultProvider, config]);
+  }, [web3Modal, config, connectDefaultProvider]);
 
   useEffect(() => {
-    const chainChangedCallback = (chainId: string) => {
+    const chainChangedCallback = async (chainId: string) => {
       if (!config.supportedChains.includes(parseInt(chainId))) {
-        // @todo add 'unsupported network' event
         // switch to a default provider
         connectDefaultProvider();
       } else {
-        // @todo add 'network changed' event
-        connect();
+        await web3Modal.connect();
       }
     };
 
-    const accountsChangedCallback = (accounts: string[]) => {
+    const accountsChangedCallback = async (accounts: string[]) => {
       if (!accounts.length) {
-        // @todo add 'access revoked' event
         // switch to a default provider
+        web3Modal.clearCachedProvider();
         connectDefaultProvider();
-        // remove listeners
-        setModalProvider(null);
       } else {
-        // @todo add 'account changed event' event
-        connect();
+        await web3Modal.connect();
       }
     };
-    const disconnectCallback = () => {
-      // @todo add 'access revoked' event
+    const disconnectCallback = async () => {
       // switch to a default provider
+      web3Modal.clearCachedProvider();
       connectDefaultProvider();
-      // remove listeners
-      setModalProvider(null);
     };
     if (!modalProvider) return;
 
@@ -71,16 +71,7 @@ export const useProviderListeners = (
 
     // subscribe to provider disconnection
     modalProvider.on('disconnect', disconnectCallback);
+  }, [modalProvider, web3Modal, config, connectDefaultProvider]);
 
-    // unsubscribe
-    return () => {
-      if ((modalProvider as WalletConnectProvider).isWalletConnect) {
-        modalProvider.off('accountsChanged', chainChangedCallback);
-        modalProvider.off('chainChanged', chainChangedCallback);
-        modalProvider.off('disconnect', disconnectCallback);
-      } else {
-        (modalProvider as ethers.providers.Web3Provider).removeAllListeners();
-      }
-    };
-  }, [modalProvider, web3Modal, connectDefaultProvider, connect, config]);
+  return modalProvider;
 };

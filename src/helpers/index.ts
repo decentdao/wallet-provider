@@ -1,48 +1,30 @@
-import { DWPConfig, InjectedProviderInfo, BaseProviderInfo, ProviderApiKeys } from '../types/index';
-import Web3Modal from 'web3modal';
 import { ethers, getDefaultProvider } from 'ethers';
+import { DWPConfig, InitialState, ProviderApiKeys } from '../types/index';
 
-export const makeInjectedProvider = async (
-  web3Provider: ethers.providers.Web3Provider,
-  config: DWPConfig
-): Promise<InjectedProviderInfo> => {
-  const local =
-    config.localChainId &&
-    (await web3Provider.getNetwork()).chainId === parseInt(config.localChainId, 10);
-
-  const signer = web3Provider.getSigner();
+export const getProviderInfo = async (_provider: any, config: DWPConfig) => {
+  const provider = new ethers.providers.Web3Provider(_provider);
+  const network = await provider.getNetwork();
+  const signer = provider.getSigner();
+  const local = config.localChainId && network.chainId === parseInt(config.localChainId, 10);
+  const account = (await signer.getAddress()) || null;
   return {
-    account: await signer.getAddress(),
+    account: account,
     signerOrProvider: signer,
-    provider: web3Provider,
-    connectionType: 'injected provider',
-    network: local ? 'localhost' : (await web3Provider.getNetwork()).name,
-    chainId: (await web3Provider.getNetwork()).chainId,
+    provider: provider,
+    connectionType: !account ? 'fallback' : 'injected provider',
+    network: local ? 'localhost' : network.name,
+    chainId: network.chainId,
   };
 };
 
-export const getInjectedProvider = (
-  web3ModalProvider: Web3Modal,
-  config: DWPConfig
-): Promise<InjectedProviderInfo> => {
-  return new Promise<InjectedProviderInfo>((resolve, reject) => {
-    web3ModalProvider
-      .connect()
-      .then(userSuppliedProvider =>
-        makeInjectedProvider(new ethers.providers.Web3Provider(userSuppliedProvider), config)
-      )
-      .then(resolve)
-      .catch(reject);
-  });
-};
-
-export const getLocalProvider = (config: DWPConfig): Promise<BaseProviderInfo> => {
+export const getLocalProvider = (config: DWPConfig): Promise<InitialState> => {
   const localProvider = new ethers.providers.JsonRpcProvider(config.localProviderURL);
-  return new Promise<BaseProviderInfo>((resolve, reject) => {
+  return new Promise<InitialState>((resolve, reject) => {
     localProvider
       .detectNetwork()
       .then(network => {
         resolve({
+          account: null,
           provider: localProvider,
           signerOrProvider: localProvider,
           connectionType: 'local provider',
@@ -54,7 +36,7 @@ export const getLocalProvider = (config: DWPConfig): Promise<BaseProviderInfo> =
   });
 };
 
-export const getFallbackProvider = (config: DWPConfig): BaseProviderInfo => {
+export const getFallbackProvider = (config: DWPConfig): InitialState => {
   const providerApiKeys: ProviderApiKeys = {};
   if (config.providerKeys.infura) providerApiKeys.infura = config.providerKeys.infura;
   if (config.providerKeys.alchemy) providerApiKeys.alchemy = config.providerKeys.alchemy;
@@ -64,6 +46,7 @@ export const getFallbackProvider = (config: DWPConfig): BaseProviderInfo => {
   const defaultProvider = getDefaultProvider(network, providerApiKeys);
 
   return {
+    account: null,
     provider: defaultProvider,
     signerOrProvider: defaultProvider,
     connectionType: 'readonly provider',

@@ -1,6 +1,6 @@
 {
   "name": "@decent-org/wallet-provider",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Using ![Web3 Modal](https://web3modal.com) to connect Ethereum or EVM supported wallets.",
   "source": "src/index.ts",
   "main": "dist/index.js",
@@ -24,11 +24,13 @@
     "clean:node_modules": "rm -rf node_modules && cd sandbox && rm -rf node_modules",
     "clean:all": "npm run clean && npm run clean:node_modules",
     "package:install": "npm run clean:all && npm install && cd sandbox && npm install",
-    "build": "npm run clean && microbundle --jsx React.createElement && cp package.json README.md ./dist",
+    "build": "microbundle --jsx React.createElement && cp package.json README.md ./dist",
     "create:link": "cd ./dist && npm link && cd ..",
     "set:link": "cd sandbox && npm link @decent-org/wallet-provider",
-    "build:link": "npm run lint:fix && npm run build && npm run create:link && npm run set:link",
-    "start": "cd sandbox && npm run start"
+    "build:link": "npm run clean && npm run lint:fix && npm run build && npm run create:link && npm run set:link",
+    "build:watch": "microbundle --watch --jsx React.createElement",
+    "start": "cd sandbox && npm run start",
+    "build:start": "npm run package:install && npm run build:link && npm run start"
   },
   "author": "Decent DAO",
   "license": "MIT",
