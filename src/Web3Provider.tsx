@@ -3,9 +3,9 @@ import Web3Modal from 'web3modal';
 import type { ConnectFn, DisconnectFn, DWPConfig, InitialState, ModalTheme } from './types';
 import { ActionTypes, Web3ProviderActions } from './actions';
 import { getWeb3modalOptions } from './helpers/web3ModalConfig';
-import { getLocalProvider, getFallbackProvider, getInjectedProvider } from './helpers';
 import { useProviderListeners } from './hooks/useProviderListeners';
 import { Web3ProviderContext } from './hooks/useWeb3Provider';
+import { getFallbackProvider, getLocalProvider, getProviderInfo } from './helpers';
 
 const initialState: InitialState = {
   account: null,
@@ -26,7 +26,7 @@ const getInitialState = () => {
 
 const reducer = (state: InitialState, action: ActionTypes) => {
   switch (action.type) {
-    case Web3ProviderActions.SET_INJECTED_PROVIDER: {
+    case Web3ProviderActions.CONNECT: {
       const { account, signerOrProvider, provider, connectionType, network, chainId } =
         action.payload;
       return {
@@ -39,22 +39,6 @@ const reducer = (state: InitialState, action: ActionTypes) => {
         chainId,
         isProviderLoading: false,
       };
-    }
-    case Web3ProviderActions.SET_LOCAL_PROVIDER:
-    case Web3ProviderActions.SET_FALLBACK_PROVIDER: {
-      const { provider, connectionType, network, chainId, signerOrProvider } = action.payload;
-      return {
-        ...initialState,
-        provider,
-        connectionType,
-        network,
-        chainId,
-        signerOrProvider,
-        isProviderLoading: false,
-      };
-    }
-    case Web3ProviderActions.DISCONNECT_WALLET: {
-      return { ...initialState };
     }
     default:
       return state;
@@ -75,48 +59,50 @@ export function Web3Provider({
 
   const connectDefaultProvider = useCallback(async () => {
     web3Modal.clearCachedProvider();
-    const isLocalDevelopment =
-      process.env.NODE_ENV === 'development' && !!config.localChainId && !!config.localProviderURL;
-    if (isLocalDevelopment) {
+    if (process.env.REACT_APP_LOCAL_PROVIDER_URL && process.env.NODE_ENV === 'development') {
       dispatch({
-        type: Web3ProviderActions.SET_LOCAL_PROVIDER,
+        type: Web3ProviderActions.CONNECT,
         payload: await getLocalProvider(config),
       });
     } else {
       dispatch({
-        type: Web3ProviderActions.SET_FALLBACK_PROVIDER,
+        type: Web3ProviderActions.CONNECT,
         payload: getFallbackProvider(config),
       });
     }
-  }, [config, web3Modal]);
+  }, [web3Modal, config]);
+
+  const provider = useProviderListeners(web3Modal, config, connectDefaultProvider, state.account);
+
+  useEffect(() => {
+    if (provider) {
+      const dispatchConnection = async () => {
+        dispatch({
+          type: Web3ProviderActions.CONNECT,
+          payload: await getProviderInfo(provider, config),
+        });
+      };
+      dispatchConnection();
+    }
+  }, [provider, config]);
 
   const connect: ConnectFn = useCallback(async () => {
-    const userInjectedProvider = await getInjectedProvider(web3Modal, config);
-    if (config.supportedChains.includes(userInjectedProvider.chainId)) {
-      dispatch({
-        type: Web3ProviderActions.SET_INJECTED_PROVIDER,
-        payload: userInjectedProvider,
-      });
-    } else {
-      connectDefaultProvider();
-    }
-  }, [connectDefaultProvider, config, web3Modal]);
+    web3Modal.clearCachedProvider();
+    await web3Modal.connect();
+  }, [web3Modal]);
 
-  const disconnect: DisconnectFn = useCallback(() => {
-    // @todo add 'account disconnected' event
-    // switch to a default provider
+  const disconnect: DisconnectFn = useCallback(async () => {
+    web3Modal.clearCachedProvider();
     connectDefaultProvider();
-  }, [connectDefaultProvider]);
-
-  useProviderListeners(web3Modal, connectDefaultProvider, connect, config);
+  }, [web3Modal, connectDefaultProvider]);
 
   const load = useCallback(async () => {
     if (web3Modal.cachedProvider) {
-      await connect();
+      await web3Modal.connect();
     } else {
-      connectDefaultProvider();
+      disconnect();
     }
-  }, [connect, connectDefaultProvider, web3Modal]);
+  }, [web3Modal, disconnect]);
 
   useEffect(() => {
     load();
