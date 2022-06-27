@@ -1,6 +1,6 @@
 # Decent Wallet Provider
 
-Easily connect to an dApp to a web3 wallet. Built with the help of [web3modal](https://web3modal.com) and [ethers](https://docs.ethers.io/v5/)s' providers, this package quickly gets an dApp connected and interacting with an EVM compaitble blockchain.
+Easily connect a dApp to a web3 wallet. Built with the help of [web3modal](https://web3modal.com) and [ethers](https://docs.ethers.io/v5/)s' providers, this package quickly gets a dApp connected and interacting with an EVM compaitble blockchain with just a few props and 2 components.
 
 ## Supported Wallets
 
