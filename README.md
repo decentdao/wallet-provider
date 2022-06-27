@@ -1,6 +1,6 @@
 # Decent Wallet Provider
 
- Built with the help of [Web3 Modal](https://web3modal.com). Connects easily to EVM wallets and with the aid of a Provider Component (React Context Api) and a custom hook. Connect to your favorite wallets and using the custom hook, [ethers](https://docs.ethers.io/v5/)'s Web3Provider to interact with the blockchain quickly.
+Easily connect to an dApp to a web3 wallet. Built with the help of [web3modal](https://web3modal.com) and [ethers](https://docs.ethers.io/v5/)s' providers, this package quickly gets an dApp connected and interacting with an EVM compaitble blockchain.
 
 ## Supported Wallets
 
