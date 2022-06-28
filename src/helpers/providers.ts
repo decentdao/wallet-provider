@@ -1,5 +1,5 @@
 import { ethers, getDefaultProvider } from 'ethers';
-import { DWPConfig, InitialState, ProviderApiKeys } from '../types/index';
+import { DWPConfig, WalletProvider, ProviderApiKeys } from '../types/index';
 
 export const getProviderInfo = async (_provider: any, config: DWPConfig) => {
   const provider = new ethers.providers.Web3Provider(_provider);
@@ -17,9 +17,9 @@ export const getProviderInfo = async (_provider: any, config: DWPConfig) => {
   };
 };
 
-export const getLocalProvider = (config: DWPConfig): Promise<InitialState> => {
+export const getLocalProvider = (config: DWPConfig): Promise<WalletProvider> => {
   const localProvider = new ethers.providers.JsonRpcProvider(config.localProviderURL);
-  return new Promise<InitialState>((resolve, reject) => {
+  return new Promise<WalletProvider>((resolve, reject) => {
     localProvider
       .detectNetwork()
       .then(network => {
@@ -36,7 +36,7 @@ export const getLocalProvider = (config: DWPConfig): Promise<InitialState> => {
   });
 };
 
-export const getFallbackProvider = (config: DWPConfig): InitialState => {
+export const getFallbackProvider = (config: DWPConfig): WalletProvider => {
   const providerApiKeys: ProviderApiKeys = {};
   if (config.providerKeys.infura) providerApiKeys.infura = config.providerKeys.infura;
   if (config.providerKeys.alchemy) providerApiKeys.alchemy = config.providerKeys.alchemy;

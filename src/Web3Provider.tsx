@@ -1,13 +1,13 @@
 import React, { ReactNode, useCallback, useEffect, useMemo, useReducer } from 'react';
 import Web3Modal from 'web3modal';
-import type { ConnectFn, DisconnectFn, DWPConfig, InitialState, ModalTheme } from './types';
+import type { ConnectFn, DisconnectFn, DWPConfig, WalletProvider, ModalTheme } from './types';
 import { ActionTypes, Web3ProviderActions } from './actions';
 import { getWeb3modalOptions } from './helpers/web3ModalConfig';
 import { useProviderListeners } from './hooks/useProviderListeners';
 import { Web3ProviderContext } from './hooks/useWeb3Provider';
 import { getFallbackProvider, getLocalProvider, getProviderInfo } from './helpers';
 
-const initialState: InitialState = {
+const initialState: WalletProvider = {
   account: null,
   signerOrProvider: null,
   connectionType: 'not connected',
@@ -24,7 +24,7 @@ const getInitialState = () => {
   };
 };
 
-const reducer = (state: InitialState, action: ActionTypes) => {
+const reducer = (state: WalletProvider, action: ActionTypes) => {
   switch (action.type) {
     case Web3ProviderActions.CONNECT: {
       const { account, signerOrProvider, provider, connectionType, network, chainId } =

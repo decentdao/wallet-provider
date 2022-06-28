@@ -1,4 +1,4 @@
-import { InitialState } from '../types';
+import { WalletProvider } from '../types';
 
 export enum Web3ProviderActions {
   CONNECT = 'CONNECT_WALLET',
@@ -6,5 +6,5 @@ export enum Web3ProviderActions {
 
 export type ActionTypes = {
   type: Web3ProviderActions.CONNECT;
-  payload: InitialState;
+  payload: WalletProvider;
 };

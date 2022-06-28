@@ -2,7 +2,7 @@ export type ConnectFn = () => Promise<void>;
 export type DisconnectFn = () => void;
 export type ModalProvider = any;
 
-export interface InitialState {
+export interface WalletProvider {
   connectionType: string;
   network: string;
   chainId: number;
