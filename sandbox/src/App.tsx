@@ -2,9 +2,8 @@ import './components/styles/main.css';
 import { Container } from './components/Container';
 import { ConnectionProperty } from './components/ConnectionProperty';
 import { Button } from './components/Button';
-import { useWeb3Provider, PROVIDER_EVENT, WalletProviderEvent } from '@decent-org/wallet-provider';
-import { useEffect, useRef } from 'react';
-import { toast } from 'react-toastify';
+import { useWeb3Provider } from '@decent-org/wallet-provider';
+import { useEvents } from './examples/useEvents';
 
 function App() {
   const {
@@ -13,20 +12,7 @@ function App() {
     disconnect,
   } = useWeb3Provider();
 
-  const isMountedRef = useRef(false)
-
-  useEffect(() => {
-    if(isMountedRef.current) {
-      window.addEventListener(PROVIDER_EVENT, (event: CustomEventInit<WalletProviderEvent>) => {
-        toast.warn(event.detail!.message)
-        return
-      })
-    }
-    isMountedRef.current = true
-    return () => {
-      window.removeEventListener(PROVIDER_EVENT, () => {})
-    }
-  }, [])
+  useEvents();
 
   const signMessage = async () => {
     const msg = 'Hello World!'
