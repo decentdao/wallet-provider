@@ -5,6 +5,8 @@ export function emitUnsupportedChainEvent(event: string, supportedChainIds: stri
   const UNSUPPORTED_CHAIN_IDS_EVENT = new CustomEvent<WalletProviderEvent>(PROVIDER_EVENT, {
     detail: {
       providerEvent: event,
+      type: 'warn',
+      title: 'Unsupported chain ids',
       message: `${UNSUPPORTED_CHAINS_IDS_MESSAGE}: ${supportedChainIds}`,
     },
   });
