@@ -1,10 +1,10 @@
-import { CHAIN_CHANGED, CONNECT, ACCOUNT_CHANGED, DISCONNECT } from './../constants/events';
+import { CHAIN_CHANGED, CONNECT, ACCOUNT_CHANGED, DISCONNECT } from '../constants/events';
 import { DWPConfig } from '../types';
 import { useState, useEffect, useMemo } from 'react';
 import Web3Modal from 'web3modal';
 import { emitUnsupportedChainEvent } from '../helpers';
 
-export const useProviderListeners = (
+export const useListeners = (
   web3Modal: Web3Modal,
   config: DWPConfig,
   connectDefaultProvider: () => Promise<void>,

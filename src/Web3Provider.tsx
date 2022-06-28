@@ -3,7 +3,7 @@ import Web3Modal from 'web3modal';
 import type { ConnectFn, DisconnectFn, DWPConfig, WalletProvider, ModalTheme } from './types';
 import { ActionTypes, Web3ProviderActions } from './actions';
 import { getWeb3modalOptions } from './helpers/web3ModalConfig';
-import { useProviderListeners } from './hooks/useProviderListeners';
+import { useListeners } from './hooks/useListeners';
 import { Web3ProviderContext } from './hooks/useWeb3Provider';
 import { getFallbackProvider, getLocalProvider, getProviderInfo } from './helpers';
 
@@ -72,7 +72,7 @@ export function Web3Provider({
     }
   }, [web3Modal, config]);
 
-  const provider = useProviderListeners(web3Modal, config, connectDefaultProvider, state.account);
+  const provider = useListeners(web3Modal, config, connectDefaultProvider, state.account);
 
   useEffect(() => {
     if (provider) {
