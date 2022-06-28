@@ -44,7 +44,7 @@ ReactDOM.render(
 `<Web3Provider>` accepts 2 props.
 
 | name | default | type | required | description |
-| ---- | :-------: | ----: | --------: | -----------: |
+| :---- | :-------: | ----: | --------: | -----------: |
 | config | - | [DWPConfig](./src/types/index.ts) | `true` | Provider configurations |
 | theme | 'light' | `string` \| [ModalTheme](./src/types/index.ts) | `false` | [Web3Modal](https://github.com/Web3Modal/web3modal) theme settings |
 
@@ -55,7 +55,7 @@ ReactDOM.render(
 Configuration for the wallet-provider.
 
 | name | default | type | required | description |
-| ---- | :-------: | ----: | --------: | -----------: |
+| :---- | :-------: | ----: | --------: | -----------: |
 | providerKeys | - | [ProviderKeys](./src/types/index.ts) | At least one key is required. | Node api keys for fallback provider |
 | localChainId | `undefined` | `string` | `false` | Chain id for local node |
 localProviderURL | `undefined` | `string` | `false` | providerURL for local node |
@@ -133,6 +133,23 @@ function Component() {
   ontract.connect(daoData.moduleAddresses[1], signer);
 }
 ```
+
+## Events
+
+Add an event eventlistener and subscribe to `wallet-provider` events. There is a Constant you can import to ensure correct subscription.
+
+```js
+ window.addEventListener(PROVIDER_EVENT, (event: CustomEventInit<WalletProviderEvent>) => {
+        console.log(event.detail!.message)
+        return
+      })
+    }
+```
+
+| title | type | description |
+| :---- | ---: | ----------: | 
+| UNSUPPORTED_CHAIN_IDS | warn | Connected chain id is not supported |
+
 
 ## Utilities
 Coming soon

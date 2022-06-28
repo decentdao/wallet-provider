@@ -1,4 +1,8 @@
-import { PROVIDER_EVENT, UNSUPPORTED_CHAINS_IDS_MESSAGE } from '../constants';
+import {
+  PROVIDER_EVENT,
+  UNSUPPORTED_CHAINS_IDS_MESSAGE,
+  UNSUPPORTED_CHAIN_IDS,
+} from '../constants';
 import { WalletProviderEvent } from '../types';
 
 export function emitUnsupportedChainEvent(event: string, supportedChainIds: string) {
@@ -6,7 +10,7 @@ export function emitUnsupportedChainEvent(event: string, supportedChainIds: stri
     detail: {
       providerEvent: event,
       type: 'warn',
-      title: 'Unsupported chain ids',
+      title: UNSUPPORTED_CHAIN_IDS,
       message: `${UNSUPPORTED_CHAINS_IDS_MESSAGE}: ${supportedChainIds}`,
     },
   });
