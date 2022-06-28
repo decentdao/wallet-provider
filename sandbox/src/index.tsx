@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { web3ProviderConfig } from './providerConfig';
 import { Web3Provider } from '@decent-org/wallet-provider';
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,7 +15,15 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Web3Provider config={web3ProviderConfig()} theme="light">
-      <App />
+      <>
+        <ToastContainer
+                position="bottom-center"
+                closeButton={false}
+                newestOnTop={false}
+                pauseOnFocusLoss={false}
+                />
+        <App />
+      </>
     </Web3Provider>
   </React.StrictMode>
 );
