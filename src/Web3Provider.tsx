@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo, useReducer } from 'react';
 import Web3Modal from 'web3modal';
 import type { ConnectFn, DisconnectFn, DWPConfig, InitialState, ModalTheme } from './types';
 import { ActionTypes, Web3ProviderActions } from './actions';
@@ -52,7 +52,7 @@ export function Web3Provider({
 }: {
   config: DWPConfig;
   theme?: string | ModalTheme;
-  children: any;
+  children: ReactNode | ReactNode[];
 }) {
   const [state, dispatch] = useReducer(reducer, getInitialState());
   const web3Modal = useMemo(() => new Web3Modal(getWeb3modalOptions(theme)), [theme]);

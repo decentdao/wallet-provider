@@ -33,3 +33,8 @@ export interface ModalTheme {
   border: string;
   hover: string;
 }
+
+export interface WalletProviderEvent {
+  message: string;
+  providerEvent: string;
+}
