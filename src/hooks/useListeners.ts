@@ -1,6 +1,6 @@
 import { FallbackProviders, DWPConfig } from './../types/index';
 import { CHAIN_CHANGED, CONNECT, ACCOUNT_CHANGED, DISCONNECT } from '../constants/events';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import Web3Modal from 'web3modal';
 import { emitUnsupportedChainEvent } from '../helpers';
 import { ethers } from 'ethers';
@@ -9,18 +9,9 @@ export const useListeners = (
   web3Modal: Web3Modal,
   config: DWPConfig,
   connectDefaultProvider: () => Promise<FallbackProviders>,
-  connectInjectedProvider: (provider: any) => Promise<ethers.providers.Web3Provider>,
-  account: string | null
+  connectInjectedProvider: (provider: any) => Promise<ethers.providers.Web3Provider>
 ) => {
   const [modalProvider, setModalProvider] = useState<any>(null);
-
-  const isConnected = useMemo(() => !!account, [account]);
-
-  useEffect(() => {
-    if (!isConnected) {
-      setModalProvider(null);
-    }
-  }, [isConnected]);
 
   useEffect(() => {
     const connectListener = async (_modalProvider: any) => {
@@ -78,12 +69,12 @@ export const useListeners = (
     };
 
     // subscribe to chain events
-    modalProvider.once(CHAIN_CHANGED, chainChangedCallback);
+    modalProvider.on(CHAIN_CHANGED, chainChangedCallback);
 
     // subscribe to account change events
-    modalProvider.once(ACCOUNT_CHANGED, accountsChangedCallback);
+    modalProvider.on(ACCOUNT_CHANGED, accountsChangedCallback);
 
     // subscribe to provider disconnection
-    modalProvider.once(DISCONNECT, disconnectCallback);
+    modalProvider.on(DISCONNECT, disconnectCallback);
   }, [modalProvider, web3Modal, config, connectDefaultProvider]);
 };

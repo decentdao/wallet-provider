@@ -91,7 +91,7 @@ export function Web3Provider({
     [config]
   );
 
-  useListeners(web3Modal, config, connectDefaultProvider, connectInjectedProvider, state.account);
+  useListeners(web3Modal, config, connectDefaultProvider, connectInjectedProvider);
 
   const connect: ConnectFn = useCallback(async () => {
     web3Modal.clearCachedProvider();
