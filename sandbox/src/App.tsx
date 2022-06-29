@@ -3,6 +3,7 @@ import { Container } from './components/Container';
 import { ConnectionProperty } from './components/ConnectionProperty';
 import { Button } from './components/Button';
 import { useWeb3Provider } from '@decent-org/wallet-provider';
+import { useEvents } from './examples/useEvents';
 
 function App() {
   const {
@@ -10,6 +11,8 @@ function App() {
     connect,
     disconnect,
   } = useWeb3Provider();
+
+  useEvents();
 
   const signMessage = async () => {
     const msg = 'Hello World!'
