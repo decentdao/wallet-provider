@@ -1,13 +1,15 @@
+import { FallbackProviders, DWPConfig } from './../types/index';
 import { CHAIN_CHANGED, CONNECT, ACCOUNT_CHANGED, DISCONNECT } from '../constants/events';
-import { DWPConfig } from '../types';
 import { useState, useEffect, useMemo } from 'react';
 import Web3Modal from 'web3modal';
 import { emitUnsupportedChainEvent } from '../helpers';
+import { ethers } from 'ethers';
 
 export const useListeners = (
   web3Modal: Web3Modal,
   config: DWPConfig,
-  connectDefaultProvider: () => Promise<void>,
+  connectDefaultProvider: () => Promise<FallbackProviders>,
+  connectInjectedProvider: (provider: any) => Promise<ethers.providers.Web3Provider>,
   account: string | null
 ) => {
   const [modalProvider, setModalProvider] = useState<any>(null);
@@ -21,35 +23,39 @@ export const useListeners = (
   }, [isConnected]);
 
   useEffect(() => {
-    // subscribe to connect events
-    web3Modal.on(CONNECT, async _modalProvider => {
+    const connectListener = async (_modalProvider: any) => {
       // check that connected chain is supported
       if (config.supportedChains.includes(parseInt(_modalProvider.chainId))) {
+        await connectInjectedProvider(_modalProvider);
         setModalProvider(_modalProvider);
 
         // check that fallback id is supported (prevents endless loop)
       } else if (config.supportedChains.includes(parseInt(config.fallbackChainId))) {
         emitUnsupportedChainEvent(CONNECT, config.supportedChains.join(', '));
         await connectDefaultProvider();
-        setModalProvider(null);
-
-        // connect connect to provider, error in config
+        // cannot connect to provider, error in config
       } else {
         emitUnsupportedChainEvent(CONNECT, config.supportedChains.join(', '));
         setModalProvider(null);
       }
-    });
-    return () => {
-      web3Modal.off(CONNECT);
     };
-  }, [web3Modal, config, connectDefaultProvider]);
+
+    // subscribe to connect events
+    web3Modal.on(CONNECT, connectListener);
+
+    return () => {
+      web3Modal.off(CONNECT, connectListener);
+    };
+  }, [web3Modal, config, connectDefaultProvider, connectInjectedProvider]);
 
   useEffect(() => {
+    if (!modalProvider) return;
     const chainChangedCallback = async (chainId: string) => {
       if (!config.supportedChains.includes(parseInt(chainId))) {
         // switch to a default provider
         emitUnsupportedChainEvent(CHAIN_CHANGED, config.supportedChains.join(', '));
-        connectDefaultProvider();
+        await connectDefaultProvider();
+        setModalProvider(null);
       } else {
         await web3Modal.connect();
       }
@@ -58,8 +64,8 @@ export const useListeners = (
     const accountsChangedCallback = async (accounts: string[]) => {
       if (!accounts.length) {
         // switch to a default provider
-        web3Modal.clearCachedProvider();
-        connectDefaultProvider();
+        await connectDefaultProvider();
+        setModalProvider(null);
       } else {
         await web3Modal.connect();
       }
@@ -67,19 +73,17 @@ export const useListeners = (
     const disconnectCallback = async () => {
       // switch to a default provider
       web3Modal.clearCachedProvider();
-      connectDefaultProvider();
+      await connectDefaultProvider();
+      setModalProvider(null);
     };
-    if (!modalProvider) return;
 
     // subscribe to chain events
-    modalProvider.on(CHAIN_CHANGED, chainChangedCallback);
+    modalProvider.once(CHAIN_CHANGED, chainChangedCallback);
 
     // subscribe to account change events
-    modalProvider.on(ACCOUNT_CHANGED, accountsChangedCallback);
+    modalProvider.once(ACCOUNT_CHANGED, accountsChangedCallback);
 
     // subscribe to provider disconnection
-    modalProvider.on(DISCONNECT, disconnectCallback);
+    modalProvider.once(DISCONNECT, disconnectCallback);
   }, [modalProvider, web3Modal, config, connectDefaultProvider]);
-
-  return modalProvider;
 };

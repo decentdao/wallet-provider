@@ -40,6 +40,9 @@ const reducer = (state: WalletProvider, action: ActionTypes) => {
         isProviderLoading: false,
       };
     }
+    case Web3ProviderActions.DISCONNECT: {
+      return { ...initialState };
+    }
     default:
       return state;
   }
@@ -60,31 +63,35 @@ export function Web3Provider({
   const connectDefaultProvider = useCallback(async () => {
     web3Modal.clearCachedProvider();
     if (process.env.REACT_APP_LOCAL_PROVIDER_URL && process.env.NODE_ENV === 'development') {
+      const [walletProvider, provider] = await getLocalProvider(config);
       dispatch({
         type: Web3ProviderActions.CONNECT,
-        payload: await getLocalProvider(config),
+        payload: walletProvider,
       });
+      return provider;
     } else {
+      const [walletProvider, provider] = getFallbackProvider(config);
       dispatch({
         type: Web3ProviderActions.CONNECT,
-        payload: getFallbackProvider(config),
+        payload: walletProvider,
       });
+      return provider;
     }
   }, [web3Modal, config]);
 
-  const provider = useListeners(web3Modal, config, connectDefaultProvider, state.account);
+  const connectInjectedProvider = useCallback(
+    async (_provider: any) => {
+      const [walletProvider, provider] = await getProviderInfo(_provider, config);
+      dispatch({
+        type: Web3ProviderActions.CONNECT,
+        payload: walletProvider,
+      });
+      return provider;
+    },
+    [config]
+  );
 
-  useEffect(() => {
-    if (provider) {
-      const dispatchConnection = async () => {
-        dispatch({
-          type: Web3ProviderActions.CONNECT,
-          payload: await getProviderInfo(provider, config),
-        });
-      };
-      dispatchConnection();
-    }
-  }, [provider, config]);
+  useListeners(web3Modal, config, connectDefaultProvider, connectInjectedProvider, state.account);
 
   const connect: ConnectFn = useCallback(async () => {
     web3Modal.clearCachedProvider();

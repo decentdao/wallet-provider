@@ -1,6 +1,10 @@
+import { ethers } from 'ethers';
+
 export type ConnectFn = () => Promise<void>;
 export type DisconnectFn = () => void;
 export type ModalProvider = any;
+
+export type FallbackProviders = ethers.providers.JsonRpcProvider | ethers.providers.BaseProvider;
 
 export interface WalletProvider {
   connectionType: string;

@@ -1,6 +1,6 @@
 export const PROVIDER_EVENT = 'provider-event';
 export const CHAIN_CHANGED = 'chainChanged';
-export const ACCOUNT_CHANGED = 'accountChanged';
+export const ACCOUNT_CHANGED = 'accountsChanged';
 export const UNSUPPORTED_CHAIN_IDS = 'UNSUPPORTED_CHAIN_IDS';
 export const CONNECT = 'connect';
 export const DISCONNECT = 'disconnect';
