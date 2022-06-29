@@ -1,9 +1,9 @@
 import { Context, createContext, useContext } from 'react';
 
-import { ConnectFn, DisconnectFn, InitialState } from '../types';
+import { ConnectFn, DisconnectFn, WalletProvider } from '../types';
 
 export interface IWeb3ProviderContext {
-  state: InitialState;
+  state: WalletProvider;
   connect: ConnectFn;
   disconnect: DisconnectFn;
 }
