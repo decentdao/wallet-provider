@@ -136,19 +136,21 @@ function Component() {
 
 ## Events
 
-Add an event eventlistener and subscribe to `wallet-provider` events. There is a Constant you can import to ensure correct subscription.
+Add an event eventListener and subscribe to `wallet-provider` events. There is a Constant you can import to ensure correct subscription. For an example using React Toastify see the [useEvents](./sandbox/src/components/examples/useEvents.ts).
 
-```js
- window.addEventListener(PROVIDER_EVENT, (event: CustomEventInit<WalletProviderEvent>) => {
-        console.log(event.detail!.message)
-        return
-      })
-    }
+```tsx
+import { PROVIDER_EVENT } from '@decent-org/wallet-provider';
+
+window.addEventListener(PROVIDER_EVENT, (event: CustomEventInit<WalletProviderEvent>) => {
+      console.log(event.detail!.message)
+      return
+    })
+  }
 ```
 
-| title | type | description |
-| :---- | ---: | ----------: | 
-| UNSUPPORTED_CHAIN_IDS | warn | Connected chain id is not supported |
+| title | type | description | ex: message |
+| :---- | ---: | ----------: | ----------: |
+| UNSUPPORTED_CHAIN_IDS | warn | Connected chain id is not supported | Switch to a supported chain: 1, 4 |
 
 
 ## Utilities
