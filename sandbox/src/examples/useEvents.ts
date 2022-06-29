@@ -6,15 +6,15 @@ export function useEvents() {
   const isMountedRef = useRef(false)
 
   useEffect(() => {
+    const providerEvent = (event: CustomEventInit<WalletProviderEvent>) => {
+      toast[event.detail!.type](event.detail!.message)
+    }
     if(isMountedRef.current) {
-      window.addEventListener(PROVIDER_EVENT, (event: CustomEventInit<WalletProviderEvent>) => {
-        toast.warn(event.detail!.message)
-        return
-      })
+      window.addEventListener(PROVIDER_EVENT, providerEvent)
     }
     isMountedRef.current = true
     return () => {
-      window.removeEventListener(PROVIDER_EVENT, () => {})
+      window.removeEventListener(PROVIDER_EVENT, providerEvent)
     }
   }, [])
 }
