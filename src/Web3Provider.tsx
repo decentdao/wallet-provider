@@ -58,6 +58,7 @@ export function Web3Provider({
   children: ReactNode | ReactNode[];
 }) {
   const [state, dispatch] = useReducer(reducer, getInitialState());
+  const isIframe = useMemo(() => window.location !== window.parent.location, []);
   const web3Modal = useMemo(() => new Web3Modal(getWeb3modalOptions(theme)), [theme]);
 
   const connectDefaultProvider = useCallback(async () => {
@@ -104,12 +105,16 @@ export function Web3Provider({
   }, [web3Modal, connectDefaultProvider]);
 
   const load = useCallback(async () => {
-    if (web3Modal.cachedProvider) {
-      await web3Modal.connect();
+    if (isIframe) {
+      console.log("I'm a IFRAME");
     } else {
-      disconnect();
+      if (web3Modal.cachedProvider) {
+        await web3Modal.connect();
+      } else {
+        disconnect();
+      }
     }
-  }, [web3Modal, disconnect]);
+  }, [web3Modal, disconnect, isIframe]);
 
   useEffect(() => {
     load();

@@ -1,0 +1,15 @@
+@import './button.css';
+@import './container.css';
+@import './connectionProperty.css';
+
+.app-wrapper h1 {
+  color: white;
+  padding: 0 1em;
+}
+
+.button-flex-container {
+  display: flex;
+  padding: 1em 1.5em;
+  gap: 1em;
+
+}
