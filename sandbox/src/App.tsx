@@ -4,6 +4,7 @@ import { ConnectionProperty } from './components/ConnectionProperty';
 import { Button } from './components/Button';
 import { useWeb3Provider } from '@decent-org/wallet-provider';
 import { useEvents } from './examples/useEvents';
+import { IFrame } from './components/IFrame';
 
 function App() {
   const {
@@ -66,6 +67,7 @@ function App() {
           disabled={!account}
         />
       </div>
+      <IFrame />
     </div>
   );
 }

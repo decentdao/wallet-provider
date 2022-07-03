@@ -13,3 +13,9 @@
   gap: 1em;
 
 }
+
+iframe {
+ border: 4px solid #2c2c2c;
+ border-radius: 8px;
+ background-color: #f4f4f4;
+}

@@ -45,7 +45,7 @@
     "build:watch": "microbundle --watch --jsx React.createElement",
     "start:sandbox": "cd sandbox && npm run start",
     "start:sandbox_iframe": "cd sandbox-iframe && npm run start",
-    "start:all": "npm run install:packages && npm run build:link && npm run start:sandbox && npm run start:sandbox_iframe"
+    "dev": "npm run install:packages && npm run build:link && npm run start:sandbox"
   },
   "author": "Decent DAO",
   "license": "MIT",
