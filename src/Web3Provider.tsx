@@ -6,6 +6,7 @@ import { getWeb3modalOptions } from './helpers/web3ModalConfig';
 import { useListeners } from './hooks/useListeners';
 import { Web3ProviderContext } from './hooks/useWeb3Provider';
 import { getFallbackProvider, getLocalProvider, getProviderInfo } from './helpers';
+import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 
 const initialState: WalletProvider = {
   account: null,
@@ -106,7 +107,15 @@ export function Web3Provider({
 
   const load = useCallback(async () => {
     if (isIframe) {
-      console.log("I'm a IFRAME");
+      const ethereum = new IFrameEthereumProvider({
+        // How long to wait for the response, default 1 minute
+        timeoutMilliseconds: 3000,
+        // The origins with which this provider is allowed to communicate, default '*'
+        // See postMessage docs https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+        targetOrigin: '*',
+      });
+      console.log('🚀 ~ file: Web3Provider.tsx ~ line 117 ~ ethereum', ethereum);
+      connectInjectedProvider(ethereum);
     } else {
       if (web3Modal.cachedProvider) {
         await web3Modal.connect();
@@ -114,7 +123,7 @@ export function Web3Provider({
         disconnect();
       }
     }
-  }, [web3Modal, disconnect, isIframe]);
+  }, [web3Modal, disconnect, isIframe, connectInjectedProvider]);
 
   useEffect(() => {
     load();

@@ -1,9 +1,10 @@
 import { FallbackProviders, DWPConfig } from './../types/index';
 import { CHAIN_CHANGED, CONNECT, ACCOUNT_CHANGED, DISCONNECT } from '../constants/events';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Web3Modal from 'web3modal';
 import { emitUnsupportedChainEvent } from '../helpers';
 import { ethers } from 'ethers';
+import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 
 export const useListeners = (
   web3Modal: Web3Modal,
@@ -12,22 +13,34 @@ export const useListeners = (
   connectInjectedProvider: (provider: any) => Promise<ethers.providers.Web3Provider>
 ) => {
   const [modalProvider, setModalProvider] = useState<any>(null);
-
+  const isIframe = useMemo(() => window.location !== window.parent.location, []);
   useEffect(() => {
     const connectListener = async (_modalProvider: any) => {
-      // check that connected chain is supported
-      if (config.supportedChains.includes(parseInt(_modalProvider.chainId))) {
-        await connectInjectedProvider(_modalProvider);
-        setModalProvider(_modalProvider);
-
-        // check that fallback id is supported (prevents endless loop)
-      } else if (config.supportedChains.includes(parseInt(config.fallbackChainId))) {
-        emitUnsupportedChainEvent(CONNECT, config.supportedChains.join(', '));
-        await connectDefaultProvider();
-        // cannot connect to provider, error in config
+      if (isIframe) {
+        const ethereum = new IFrameEthereumProvider({
+          // How long to wait for the response, default 1 minute
+          timeoutMilliseconds: 60000,
+          // The origins with which this provider is allowed to communicate, default '*'
+          // See postMessage docs https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+          targetOrigin: 'http://localhost:3000',
+        });
+        console.log('🚀 ~ file: Web3Provider.tsx ~ line 111 ~ ethereum', ethereum);
+        connectInjectedProvider(ethereum);
       } else {
-        emitUnsupportedChainEvent(CONNECT, config.supportedChains.join(', '));
-        setModalProvider(null);
+        // check that connected chain is supported
+        if (config.supportedChains.includes(parseInt(_modalProvider.chainId))) {
+          await connectInjectedProvider(_modalProvider);
+          setModalProvider(_modalProvider);
+
+          // check that fallback id is supported (prevents endless loop)
+        } else if (config.supportedChains.includes(parseInt(config.fallbackChainId))) {
+          emitUnsupportedChainEvent(CONNECT, config.supportedChains.join(', '));
+          await connectDefaultProvider();
+          // cannot connect to provider, error in config
+        } else {
+          emitUnsupportedChainEvent(CONNECT, config.supportedChains.join(', '));
+          setModalProvider(null);
+        }
       }
     };
 
@@ -37,7 +50,7 @@ export const useListeners = (
     return () => {
       web3Modal.off(CONNECT, connectListener);
     };
-  }, [web3Modal, config, connectDefaultProvider, connectInjectedProvider]);
+  }, [web3Modal, config, connectDefaultProvider, connectInjectedProvider, isIframe]);
 
   useEffect(() => {
     if (!modalProvider) return;

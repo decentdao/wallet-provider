@@ -7,6 +7,10 @@ export const getProviderInfo = async (
 ): Promise<[WalletProvider, ethers.providers.Web3Provider]> => {
   const provider = new ethers.providers.Web3Provider(_provider);
   const network = await provider.getNetwork();
+  if (window.location !== window.parent.location) {
+    console.log('🚀 ~ file: providers.ts ~ line 10 ~ network', network);
+    console.log('🚀 ~ file: providers.ts ~ line 9 ~ provider', provider);
+  }
   const signer = provider.getSigner();
   const local = config.localChainId && network.chainId === parseInt(config.localChainId, 10);
   const account = (await signer.getAddress()) || null;
