@@ -108,13 +108,9 @@ export function Web3Provider({
   const load = useCallback(async () => {
     if (isIframe) {
       const ethereum = new IFrameEthereumProvider({
-        // How long to wait for the response, default 1 minute
         timeoutMilliseconds: 3000,
-        // The origins with which this provider is allowed to communicate, default '*'
-        // See postMessage docs https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
         targetOrigin: '*',
       });
-      console.log('🚀 ~ file: Web3Provider.tsx ~ line 117 ~ ethereum', ethereum);
       connectInjectedProvider(ethereum);
     } else {
       if (web3Modal.cachedProvider) {
