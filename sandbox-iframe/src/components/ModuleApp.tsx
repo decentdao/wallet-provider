@@ -20,7 +20,7 @@ export function ModuleApp() {
   }
   return (
     <div className="app-wrapper">
-      <h1 className="title">Decent Wallet Provider</h1>
+      <h1 className="title">Iframe Sandbox</h1>
       <Container>
         <ConnectionProperty label="Connection Type" value={connectionType} />
         <ConnectionProperty label="account" value={!!account ? account : "not connected"} />
