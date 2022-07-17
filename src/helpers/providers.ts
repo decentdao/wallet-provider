@@ -9,13 +9,13 @@ export const getProviderInfo = async (
   const network = await provider.getNetwork();
   const signer = provider.getSigner();
   const local = config.localChainId && network.chainId === parseInt(config.localChainId, 10);
-  const account = (await signer.getAddress()) || null;
+  const account = (await signer.getAddress().catch(console.error)) || null;
   return [
     {
       account: account,
       signerOrProvider: signer,
       provider: provider,
-      connectionType: !account ? 'fallback' : 'injected provider',
+      connectionType: !account ? 'readonly provider' : 'injected provider',
       network: local ? 'localhost' : network.name,
       chainId: network.chainId,
     },

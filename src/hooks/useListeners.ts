@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo } from 'react';
 import Web3Modal from 'web3modal';
 import { emitUnsupportedChainEvent } from '../helpers';
 import { ethers } from 'ethers';
-import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 
 export const useListeners = (
   web3Modal: Web3Modal,
@@ -17,15 +16,7 @@ export const useListeners = (
   useEffect(() => {
     const connectListener = async (_modalProvider: any) => {
       if (isIframe) {
-        const ethereum = new IFrameEthereumProvider({
-          // How long to wait for the response, default 1 minute
-          timeoutMilliseconds: 60000,
-          // The origins with which this provider is allowed to communicate, default '*'
-          // See postMessage docs https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
-          targetOrigin: 'http://localhost:3000',
-        });
-        console.log('🚀 ~ file: Web3Provider.tsx ~ line 111 ~ ethereum', ethereum);
-        connectInjectedProvider(ethereum);
+        return;
       } else {
         // check that connected chain is supported
         if (config.supportedChains.includes(parseInt(_modalProvider.chainId))) {
