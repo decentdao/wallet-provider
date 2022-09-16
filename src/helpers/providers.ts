@@ -1,5 +1,5 @@
 import { FallbackProviders, DWPConfig, WalletProvider, ProviderApiKeys } from './../types/index';
-import { ethers, getDefaultProvider } from 'ethers';
+import { ethers, getDefaultProvider, providers } from 'ethers';
 
 export const getProviderInfo = async (
   _provider: any
@@ -25,15 +25,20 @@ export const getLocalProvider = async (
   config: DWPConfig
 ): Promise<[WalletProvider, FallbackProviders] | []> => {
   try {
+    const isTestEnviroment = process.env.NODE_ENV === 'test';
+
     const localProvider = new ethers.providers.JsonRpcProvider(config.localProviderURL);
 
     const network = await localProvider.detectNetwork();
-    const signer = localProvider.getSigner();
+    const signerOrProvider = isTestEnviroment ? localProvider.getSigner() : localProvider;
+    const account = isTestEnviroment
+      ? await (signerOrProvider as providers.JsonRpcSigner).getAddress()
+      : null;
     return [
       {
-        account: await signer.getAddress(),
+        account,
         provider: localProvider,
-        signerOrProvider: signer,
+        signerOrProvider,
         connectionType: 'local provider',
         network: 'localhost',
         chainId: network.chainId,
