@@ -62,34 +62,32 @@ export function Web3Provider({
 
   const connectDefaultProvider = useCallback(async () => {
     web3Modal.clearCachedProvider();
-    if (process.env.REACT_APP_LOCAL_PROVIDER_URL && process.env.NODE_ENV === 'development') {
+    if (process.env.REACT_APP_LOCAL_PROVIDER_URL && process.env.NODE_ENV !== 'production') {
       const [walletProvider, provider] = await getLocalProvider(config);
-      dispatch({
-        type: Web3ProviderActions.CONNECT,
-        payload: walletProvider,
-      });
-      return provider;
-    } else {
-      const [walletProvider, provider] = getFallbackProvider(config);
-      dispatch({
-        type: Web3ProviderActions.CONNECT,
-        payload: walletProvider,
-      });
-      return provider;
+      if (!!walletProvider && !!provider) {
+        dispatch({
+          type: Web3ProviderActions.CONNECT,
+          payload: walletProvider,
+        });
+        return provider;
+      }
     }
+    const [walletProvider, provider] = getFallbackProvider(config);
+    dispatch({
+      type: Web3ProviderActions.CONNECT,
+      payload: walletProvider,
+    });
+    return provider;
   }, [web3Modal, config]);
 
-  const connectInjectedProvider = useCallback(
-    async (_provider: any) => {
-      const [walletProvider, provider] = await getProviderInfo(_provider, config);
-      dispatch({
-        type: Web3ProviderActions.CONNECT,
-        payload: walletProvider,
-      });
-      return provider;
-    },
-    [config]
-  );
+  const connectInjectedProvider = useCallback(async (_provider: any) => {
+    const [walletProvider, provider] = await getProviderInfo(_provider);
+    dispatch({
+      type: Web3ProviderActions.CONNECT,
+      payload: walletProvider,
+    });
+    return provider;
+  }, []);
 
   useListeners(web3Modal, config, connectDefaultProvider, connectInjectedProvider);
 
